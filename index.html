@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Deep Drill</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <div class="background" id="bg"></div>
+
+    <!-- TEAM BOARDS PANEL (FIXED LEFT) -->
+    <div class="team-panel">
+        <!-- <h2 class="team-panel-title">⚙️ TEAMS</h2> -->
+
+        <!-- ENVIRONMENT INDICATOR -->
+        <div class="environment-container">
+            <div class="environment-label">
+                <h2 class="team-panel-title">MÔI TRƯỜNG</h2>
+            </div>
+            <div class="environment-bar-container">
+                <div class="environment-bar" id="environmentBar">
+                    <span class="environment-value" id="environmentValue">50</span>
+                </div>
+            </div>
+            <div class="environment-change" id="environmentChange"></div>
+        </div>
+
+        <div id="teamBoards"></div>
+
+        <!-- EVENT CARD STACK -->
+        <div class="event-card-stack">
+            <div class="card-stack-title">
+                <h2 class="team-panel-title">EVENT CARDS</h2>
+            </div>
+            <div class="card-stack-container" onclick="drawEventCard()">
+                <div class="event-card-back"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DICE PANEL (FIXED RIGHT) -->
+    <div class="dice-panel">
+        <h2 class="dice-panel-title">🎲 DICE</h2>
+
+        <div class="dice-container">
+            <div class="dice-display" id="diceDisplay">
+                <div class="dice-face" id="diceFace">?</div>
+                <div class="dice-penalty" id="dicePenalty"></div>
+            </div>
+            <button class="roll-button" id="rollButton" onclick="rollDice()">ROLL DICE</button>
+        </div>
+        <div class="turn-info">
+            <p>Current Turn:</p>
+            <p class="current-team-name" id="currentTeamName">Team A</p>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="action-buttons">
+            <button class="action-button retract-button" id="retractButton" onclick="retractDrill()" title="Move backward (one-time use)">
+                ⬆️ Thu mũi khoan
+            </button>
+            <button class="action-button remove-button" id="removeButton" onclick="removeOilField()" title="Remove largest collected tile">
+                ❌ Hủy bỏ một mỏ dầu
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-content">
+        <div class="title">🛢️ DEEP DRILL 🛢️</div>
+        <div class="subtitle">Khai thác mỏ dầu từ vùng biển sâu</div>
+
+        <!-- GAME CONTAINER -->
+        <div class="game-container">
+
+            <!-- STARTING ZONE -->
+            <div class="starting-zone">
+                <div class="starting-label">🏁 MẶT ĐẤT (START)</div>
+                <div class="starting-platform" id="startingPlatform">
+                    <!-- Team icons will be placed here initially -->
+                </div>
+            </div>
+
+            <!-- LAYER 1: BLUE (Buttons 1-8) -->
+            <div class="layer-section">
+                <div class="layer-label">LAYER 1 - SURFACE</div>
+                <div class="wave-row wave-left">
+                    <button class="oil-field blue" data-field="1">1</button>
+                    <button class="oil-field blue" data-field="2">2</button>
+                </div>
+                <div class="wave-row wave-center">
+                    <button class="oil-field blue" data-field="3">3</button>
+                    <button class="oil-field blue" data-field="4">4</button>
+                </div>
+                <div class="wave-row wave-right">
+                    <button class="oil-field blue" data-field="5">5</button>
+                    <button class="oil-field blue" data-field="6">6</button>
+                </div>
+                <div class="wave-row wave-center">
+                    <button class="oil-field blue" data-field="7">7</button>
+                    <button class="oil-field blue" data-field="8">8</button>
+                </div>
+            </div>
+
+            <!-- LAYER 2: GREEN (Buttons 9-16) -->
+            <div class="layer-section">
+                <div class="layer-label">LAYER 2 - SHALLOW</div>
+                <div class="wave-row wave-left">
+                    <button class="oil-field green" data-field="9">9</button>
+                    <button class="oil-field green" data-field="10">10</button>
+                </div>
+                <div class="wave-row wave-center">
+                    <button class="oil-field green" data-field="11">11</button>
+                    <button class="oil-field green" data-field="12">12</button>
+                </div>
+                <div class="wave-row wave-right">
+                    <button class="oil-field green" data-field="13">13</button>
+                    <button class="oil-field green" data-field="14">14</button>
+                </div>
+                <div class="wave-row wave-center">
+                    <button class="oil-field green" data-field="15">15</button>
+                    <button class="oil-field green" data-field="16">16</button>
+                </div>
+            </div>
+
+            <!-- LAYER 3: ORANGE (Buttons 17-24) -->
+            <div class="layer-section">
+                <div class="layer-label">LAYER 3 - DEEP</div>
+                <div class="wave-row wave-left">
+                    <button class="oil-field orange" data-field="17">17</button>
+                    <button class="oil-field orange" data-field="18">18</button>
+                </div>
+                <div class="wave-row wave-center">
+                    <button class="oil-field orange" data-field="19">19</button>
+                    <button class="oil-field orange" data-field="20">20</button>
+                </div>
+                <div class="wave-row wave-right">
+                    <button class="oil-field orange" data-field="21">21</button>
+                    <button class="oil-field orange" data-field="22">22</button>
+                </div>
+                <div class="wave-row wave-center">
+                    <button class="oil-field orange" data-field="23">23</button>
+                    <button class="oil-field orange" data-field="24">24</button>
+                </div>
+            </div>
+
+            <!-- LAYER 4: RED (Buttons 25-32) -->
+            <div class="layer-section">
+                <div class="layer-label">LAYER 4 - CORE</div>
+                <div class="wave-row wave-left">
+                    <button class="oil-field red" data-field="25">25</button>
+                    <button class="oil-field red" data-field="26">26</button>
+                </div>
+                <div class="wave-row wave-center">
+                    <button class="oil-field red" data-field="27">27</button>
+                    <button class="oil-field red" data-field="28">28</button>
+                </div>
+                <div class="wave-row wave-right">
+                    <button class="oil-field red" data-field="29">29</button>
+                    <button class="oil-field red" data-field="30">30</button>
+                </div>
+                <div class="wave-row wave-center">
+                    <button class="oil-field red" data-field="31">31</button>
+                    <button class="oil-field red" data-field="32">32</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- JUMP ANIMATION OVERLAY -->
+        <div class="jump-overlay" id="jumpOverlay">
+            <div class="jump-text">JUMP!</div>
+        </div>
+
+        <!-- EVENT CARD MODAL -->
+        <div class="event-card-modal-overlay" id="eventCardModal">
+            <div class="event-card-modal">
+                <button class="event-card-close" onclick="closeEventCard()">&times;</button>
+                <img class="event-card-image" id="eventCardImage" src="" alt="Event">
+                <h2 class="event-card-title" id="eventCardTitle"></h2>
+                <p class="event-card-description" id="eventCardDescription"></p>
+                <div class="event-card-effect" id="eventCardEffect"></div>
+            </div>
+        </div>
+
+        <!-- RESULT TABLE MODAL -->
+        <div class="result-modal-overlay" id="resultModal">
+            <div class="result-modal">
+                <h1 class="result-title">🏆 FINAL RESULTS 🏆</h1>
+                <table class="result-table" id="resultTable"></table>
+            </div>
+        </div>
+
+        <!-- MODAL -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2 id="modalTitle">Oil Field #1</h2>
+                    <button class="close-btn" id="closeBtn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p class="question-text" id="questionText"></p>
+                    <div class="answers" id="answersContainer"></div>
+                </div>
+                <div class="modal-footer" id="modalFooter"></div>
+            </div>
+
+        </div>
+    </div>
+    <script src="questions.js"></script>
+    <script src="eventCards.js"></script>
+    <script src="game-logic.js"></script>
+    <script>
+        /* ===== TEAM DATA ===== */
+        const teams = [{
+            name: "Team A",
+            mines: 0,
+            position: 0,
+            score: 0,
+            collectedTiles: [],
+            hasUsedRetract: false,
+            isReturning: false,
+            status: "active"
+        }, {
+            name: "Team B",
+            mines: 0,
+            position: 0,
+            score: 0,
+            collectedTiles: [],
+            hasUsedRetract: false,
+            isReturning: false,
+            status: "active"
+        }, {
+            name: "Team C",
+            mines: 0,
+            position: 0,
+            score: 0,
+            collectedTiles: [],
+            hasUsedRetract: false,
+            isReturning: false,
+            status: "active"
+        }, {
+            name: "Team D",
+            mines: 0,
+            position: 0,
+            score: 0,
+            collectedTiles: [],
+            hasUsedRetract: false,
+            isReturning: false,
+            status: "active"
+        }, {
+            name: "Team E",
+            mines: 0,
+            position: 0,
+            score: 0,
+            collectedTiles: [],
+            hasUsedRetract: false,
+            isReturning: false,
+            status: "active"
+        }];
+
+        let currentTeamIndex = 0; // Track which team is playing
+        let isRolling = false;
+        let isMoving = false;
+        let canAnswerQuiz = false; // Flag to allow quiz interaction after movement
+        let environment = 50; // Global environment value (max 50)
+        let gameEnded = false; // Flag to prevent multiple end game triggers
+
+        /* ===== RENDER TEAM BOARDS ===== */
+        function renderTeamBoards() {
+            const container = document.getElementById("teamBoards");
+            container.innerHTML = "";
+
+            teams.forEach((team, index) => {
+                const board = document.createElement("div");
+                board.className = "team-board";
+                if (index === currentTeamIndex) {
+                    board.classList.add("active");
+                }
+
+                // Format collected tiles display
+                const tilesDisplay = team.collectedTiles.length > 0 ?
+                    team.collectedTiles.join(', ') :
+                    '-';
+
+                // Add status badge
+                let statusBadge = '';
+                if (team.status === 'arrived') {
+                    statusBadge = '<span class="arrived-badge">✓ Arrived</span>';
+                } else if (team.isReturning) {
+                    statusBadge = '<span class="returning-badge">⬆️</span>';
+                }
+
+                // Add special class for arrived teams
+                if (team.status === 'arrived') {
+                    board.classList.add('arrived');
+                }
+
+                board.innerHTML = `
+                    <div class="team-board-content">
+                        ${statusBadge}
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${team.name}&backgroundColor=ffcc00"
+                             alt="${team.name}" class="team-avatar">
+                        <div class="team-info">
+                            <div class="team-name-text">${team.name}</div>
+                            <div class="team-stats">
+                                <span>🛢️ ${team.mines}</span>
+                                <span>📍 ${tilesDisplay}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Make entire board clickable to switch turns
+                board.onclick = () => setCurrentTeam(index);
+
+                container.appendChild(board);
+            });
+        }
+
+        /* ===== SET CURRENT TEAM ===== */
+        function setCurrentTeam(index) {
+            // Decrease environment based on NEW team's oil count
+            const newTeam = teams[index];
+            const oilCount = newTeam.collectedTiles.length;
+            decreaseEnvironment(oilCount);
+
+            currentTeamIndex = index;
+            canAnswerQuiz = false; // Reset quiz flag when switching teams
+            document.getElementById('rollButton').disabled = false; // Enable roll button for new team
+
+            // Update retract button state based on current team
+            updateRetractButtonState();
+
+            renderTeamBoards();
+            updateCurrentTeamDisplay();
+        }
+
+        /* ===== UPDATE RETRACT BUTTON STATE ===== */
+        function updateRetractButtonState() {
+            const retractButton = document.getElementById('retractButton');
+            const currentTeam = teams[currentTeamIndex];
+
+            if (currentTeam.hasUsedRetract) {
+                retractButton.disabled = true;
+                retractButton.style.opacity = '0.3';
+            } else {
+                retractButton.disabled = false;
+                retractButton.style.opacity = '1';
+            }
+        }
+
+        /* ===== UPDATE CURRENT TEAM DISPLAY ===== */
+        function updateCurrentTeamDisplay() {
+            document.getElementById("currentTeamName").textContent = teams[currentTeamIndex].name;
+        }
+
+        /* ===== DECREASE ENVIRONMENT ===== */
+        function decreaseEnvironment(amount) {
+            if (amount === 0) return;
+
+            environment -= amount;
+            if (environment < 0) environment = 0;
+
+            // Update environment bar
+            updateEnvironmentBar();
+
+            // Show floating text animation
+            showEnvironmentChange(-amount);
+        }
+
+        /* ===== UPDATE ENVIRONMENT BAR ===== */
+        function updateEnvironmentBar() {
+            const bar = document.getElementById('environmentBar');
+            const value = document.getElementById('environmentValue');
+
+            // Update value
+            value.textContent = environment;
+
+            // Update bar width and color (percentage based on max 50)
+            const percentage = (environment / 50) * 100;
+            bar.style.width = percentage + '%';
+
+            // Change color based on percentage
+            if (percentage > 60) {
+                bar.style.background = 'linear-gradient(90deg, #00ff00, #00cc00)';
+            } else if (percentage > 30) {
+                bar.style.background = 'linear-gradient(90deg, #ffaa00, #ff8800)';
+            } else {
+                bar.style.background = 'linear-gradient(90deg, #ff3333, #cc0000)';
+            }
+
+            // Check end game condition
+            checkEndGame();
+        }
+
+        /* ===== SHOW ENVIRONMENT CHANGE ANIMATION ===== */
+        function showEnvironmentChange(amount) {
+            const changeEl = document.getElementById('environmentChange');
+            changeEl.textContent = amount + ' ENV';
+            changeEl.classList.add('active');
+
+            setTimeout(() => {
+                changeEl.classList.remove('active');
+            }, 1000);
+        }
+
+        /* ===== ADD MINE TO CURRENT TEAM ===== */
+        function addMineToCurrentTeam() {
+            teams[currentTeamIndex].mines++;
+            renderTeamBoards();
+        }
+
+        /* ===== RENDER TEAM ICONS ON MAP ===== */
+        function renderTeamIcons() {
+            // Remove existing icons
+            document.querySelectorAll('.team-map-icon').forEach(icon => icon.remove());
+
+            // Count teams at each position for offset calculation
+            const teamsAtPosition = {};
+            teams.forEach(team => {
+                if (!teamsAtPosition[team.position]) {
+                    teamsAtPosition[team.position] = [];
+                }
+                teamsAtPosition[team.position].push(team);
+            });
+
+            teams.forEach((team, index) => {
+                const icon = document.createElement('img');
+                icon.className = 'team-map-icon';
+                icon.id = `teamIcon${index}`;
+                icon.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${team.name}&backgroundColor=ffcc00`;
+                icon.alt = team.name;
+
+                // Place icon at team's current position
+                if (team.position === 0) {
+                    // At starting platform - bottom-left alignment
+                    const platform = document.getElementById('startingPlatform');
+                    icon.style.position = 'relative';
+                    icon.style.margin = '2px';
+                    platform.appendChild(icon);
+                } else {
+                    // On a button - bottom-left corner INSIDE the button
+                    const button = document.querySelector(`[data-field="${team.position}"]`);
+                    if (button) {
+                        // Make button container relative
+                        button.style.position = 'relative';
+
+                        // Calculate horizontal offset for multiple teams on same tile
+                        const teamsHere = teamsAtPosition[team.position];
+                        const teamIndexHere = teamsHere.indexOf(team);
+                        const leftOffset = 2 + (teamIndexHere * 22); // 22px spacing between icons
+
+                        icon.style.position = 'absolute';
+                        icon.style.bottom = '2px';
+                        icon.style.left = leftOffset + 'px';
+                        icon.style.zIndex = 60 + index;
+
+                        button.appendChild(icon);
+                    }
+                }
+            });
+
+            // Highlight collected tiles
+            highlightCollectedTiles();
+        }
+
+        /* ===== HIGHLIGHT COLLECTED TILES ===== */
+        function highlightCollectedTiles() {
+            // Remove existing highlights
+            document.querySelectorAll('.oil-field').forEach(btn => {
+                btn.classList.remove('collected-tile');
+            });
+
+            // Add highlight for each team's collected tiles
+            teams.forEach((team, index) => {
+                team.collectedTiles.forEach(tileNum => {
+                    const button = document.querySelector(`[data-field="${tileNum}"]`);
+                    if (button && !button.classList.contains('answered-correct') && !button.classList.contains('answered-incorrect')) {
+                        button.classList.add('collected-tile');
+                    }
+                });
+            });
+        }
+
+        /* ===== RETRACT DRILL (SET RETURNING STATE) ===== */
+        function retractDrill() {
+            const currentTeam = teams[currentTeamIndex];
+
+            // Check if already used
+            if (currentTeam.hasUsedRetract) {
+                alert("This team has already used 'Thu mũi khoan'!");
+                return;
+            }
+
+            // Mark as used and set returning state
+            currentTeam.hasUsedRetract = true;
+            currentTeam.isReturning = true;
+
+            // Update UI
+            updateRetractButtonState();
+            renderTeamBoards();
+
+            // Show message
+            alert(`${currentTeam.name} is now returning to surface! All future movements will be backward.`);
+        }
+
+        /* ===== REMOVE OIL FIELD (REMOVE LARGEST TILE) ===== */
+        function removeOilField() {
+            const currentTeam = teams[currentTeamIndex];
+
+            // Check if there are any collected tiles
+            if (currentTeam.collectedTiles.length === 0) {
+                alert("No oil fields to remove!");
+                return;
+            }
+
+            // Confirm action
+            if (!confirm("Remove the largest collected oil field?")) {
+                return;
+            }
+
+            // Find and remove the largest tile
+            const largestTile = Math.max(...currentTeam.collectedTiles);
+            const index = currentTeam.collectedTiles.indexOf(largestTile);
+            currentTeam.collectedTiles.splice(index, 1);
+
+            // Also decrease mines count if it was added
+            if (currentTeam.mines > 0) {
+                currentTeam.mines--;
+            }
+
+            // Update UI
+            renderTeamBoards();
+            highlightCollectedTiles();
+
+            // Show feedback
+            alert(`Removed oil field #${largestTile}`);
+        }
+
+        /* ===== BACKGROUND GENERATOR ===== */
+        const bg = document.getElementById("bg");
+
+        // drilling rods
+        for (let i = 0; i < 20; i++) {
+            let d = document.createElement("div");
+            d.className = "drill";
+            d.style.left = Math.random() * 100 + "%";
+            d.style.animationDuration = (2 + Math.random() * 2) + "s";
+            d.style.animationDelay = Math.random() * 2 + "s";
+            bg.appendChild(d);
+        }
+
+        // oil bubbles
+        for (let i = 0; i < 40; i++) {
+            let b = document.createElement("div");
+            b.className = "oil-bubble";
+            b.style.left = Math.random() * 100 + "%";
+            b.style.animationDuration = (3 + Math.random() * 3) + "s";
+            b.style.animationDelay = Math.random() * 3 + "s";
+            bg.appendChild(b);
+        }
+
+        /* ===== GAME STATE ===== */
+        const answeredFields = new Set();
+        let currentField = null;
+
+        /* ===== MODAL CONTROLS ===== */
+        const modalOverlay = document.getElementById("modalOverlay");
+        const modalTitle = document.getElementById("modalTitle");
+        const questionText = document.getElementById("questionText");
+        const answersContainer = document.getElementById("answersContainer");
+        const modalFooter = document.getElementById("modalFooter");
+        const closeBtn = document.getElementById("closeBtn");
+
+        /* ===== OPEN MODAL ===== */
+        function openModal(fieldNumber) {
+            // Check if current team is on this tile and can answer
+            const currentTeam = teams[currentTeamIndex];
+            if (currentTeam.position !== fieldNumber) {
+                alert("You can only answer the quiz for the tile you're currently on!");
+                return;
+            }
+
+            if (!canAnswerQuiz) {
+                alert("Please roll the dice and move first!");
+                return;
+            }
+
+            if (answeredFields.has(fieldNumber)) {
+                return; // Already answered
+            }
+
+            currentField = fieldNumber;
+            const question = questions[fieldNumber - 1];
+
+            modalTitle.textContent = `Mỏ Dầu #${fieldNumber} - ${currentTeam.name}`;
+            questionText.textContent = question.text;
+            answersContainer.innerHTML = "";
+            modalFooter.innerHTML = "";
+
+            // Create answer buttons
+            question.answers.forEach((answer, index) => {
+                const btn = document.createElement("button");
+                btn.className = "answer-btn";
+                btn.textContent = answer;
+                btn.onclick = () => checkAnswer(index, question.correct, fieldNumber);
+                answersContainer.appendChild(btn);
+            });
+
+            modalOverlay.classList.add("active");
+        }
+
+        /* ===== CHECK ANSWER ===== */
+        function checkAnswer(selectedIndex, correctIndex, fieldNumber) {
+            const answerButtons = document.querySelectorAll(".answer-btn");
+
+            // Disable all buttons
+            answerButtons.forEach(btn => btn.disabled = true);
+
+            // Show correct/incorrect
+            answerButtons[correctIndex].classList.add("correct");
+
+            if (selectedIndex === correctIndex) {
+                // Check if tile is already collected by this team
+                const currentTeam = teams[currentTeamIndex];
+                if (!currentTeam.collectedTiles.includes(fieldNumber)) {
+                    // Add tile to collected tiles list
+                    currentTeam.collectedTiles.push(fieldNumber);
+                    // Sort tiles for better display
+                    currentTeam.collectedTiles.sort((a, b) => a - b);
+                }
+
+                addMineToCurrentTeam(); // Add mine to current team
+
+                modalFooter.innerHTML = `<div class="feedback correct-feedback">✓ Correct! Tile ${fieldNumber} collected!</div>`;
+                markFieldAsAnswered(currentField, true);
+            } else {
+                answerButtons[selectedIndex].classList.add("incorrect");
+                modalFooter.innerHTML = '<div class="feedback incorrect-feedback">✗ Incorrect! No tile collected.</div>';
+                markFieldAsAnswered(currentField, false);
+            }
+
+            // Reset quiz flag and enable roll button
+            canAnswerQuiz = false;
+            document.getElementById('rollButton').disabled = false;
+
+            // Auto close after 2 seconds
+            setTimeout(() => {
+                closeModal();
+                renderTeamBoards(); // Update team boards to show new collected tiles
+            }, 2000);
+        }
+
+        /* ===== MARK FIELD AS ANSWERED ===== */
+        function markFieldAsAnswered(fieldNumber, isCorrect) {
+            answeredFields.add(fieldNumber);
+            const button = document.querySelector(`[data-field="${fieldNumber}"]`);
+
+            if (isCorrect) {
+                button.classList.add("answered-correct");
+                button.innerHTML = `${fieldNumber}<br>✓`;
+            } else {
+                button.classList.add("answered-incorrect");
+                button.innerHTML = `${fieldNumber}<br>✗`;
+            }
+
+            button.disabled = true;
+        }
+
+        /* ===== CLOSE MODAL ===== */
+        function closeModal() {
+            modalOverlay.classList.remove("active");
+            currentField = null;
+        }
+
+        closeBtn.onclick = closeModal;
+        modalOverlay.onclick = (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        };
+
+        /* ===== ATTACH CLICK HANDLERS TO BUTTONS ===== */
+        document.querySelectorAll(".oil-field").forEach(button => {
+            button.onclick = () => {
+                const fieldNumber = parseInt(button.getAttribute("data-field"));
+                openModal(fieldNumber);
+            };
+        });
+
+        /* ===== EVENT CARD SYSTEM ===== */
+        function drawEventCard() {
+            // Pick a random card
+            const randomIndex = Math.floor(Math.random() * EVENT_CARDS.length);
+            const card = EVENT_CARDS[randomIndex];
+
+            // Show modal with card content
+            showEventCard(card);
+        }
+
+        function showEventCard(card) {
+            const modal = document.getElementById('eventCardModal');
+            const image = document.getElementById('eventCardImage');
+            const title = document.getElementById('eventCardTitle');
+            const description = document.getElementById('eventCardDescription');
+            const effect = document.getElementById('eventCardEffect');
+
+            // Set content
+            image.src = card.image;
+            title.textContent = card.title;
+            description.textContent = card.description;
+
+            // Format effect text
+            let effectText = '';
+            if (card.effect.type === 'environment') {
+                effectText = `Trạng thái môi trường ${card.effect.value > 0 ? '+' : ''}${card.effect.value}`;
+            } else if (card.effect.type === 'position') {
+                if (card.effect.team === 'all') {
+                    effectText = `Tất cả nhóm di chuyển ${card.effect.value > 0 ? 'tiến lên' : 'lùi lại'} ${Math.abs(card.effect.value)} ô`;
+                } else {
+                    const teamName = card.effect.team === 'current' ? teams[currentTeamIndex].name : `Team ${card.effect.team}`;
+                    effectText = `${teamName} di chuyển ${card.effect.value > 0 ? 'tiến lên' : 'lùi lại'} ${Math.abs(card.effect.value)} ô`;
+                }
+            } else if (card.effect.type === 'removeOil') {
+                if (card.effect.team === 'all') {
+                    effectText = `Tất cả nhóm mất ${card.effect.count} mỏ dầu ${card.effect.count > 1 ? 's' : ''}`;
+                } else if (card.effect.team === 'current') {
+                    effectText = `${teams[currentTeamIndex].name} mất ${card.effect.count} mỏ dầu ${card.effect.count > 1 ? 's' : ''}`;
+                }
+            } else {
+                effectText = 'Không có hiệu ứng';
+            }
+            effect.textContent = effectText;
+
+            // Show modal
+            modal.classList.add('active');
+
+            // Apply effect after a delay
+            setTimeout(() => {
+                applyEventEffect(card.effect);
+            }, 1500);
+        }
+
+        function applyEventEffect(effect) {
+            if (effect.type === 'environment') {
+                environment += effect.value;
+                if (environment < 0) environment = 0;
+                if (environment > 50) environment = 50;
+                updateEnvironmentBar();
+                showEnvironmentChange(effect.value);
+            } else if (effect.type === 'position') {
+                if (effect.team === 'all') {
+                    // Apply to all teams
+                    teams.forEach(team => {
+                        team.position += effect.value;
+                        if (team.position < 0) team.position = 0;
+                        if (team.position > 32) team.position = 32;
+                    });
+                    renderTeamIcons();
+                } else {
+                    // Apply to specific team or current team
+                    let targetTeamIndex;
+                    if (effect.team === 'current') {
+                        targetTeamIndex = currentTeamIndex;
+                    } else {
+                        targetTeamIndex = teams.findIndex(t => t.name === `Team ${effect.team}`);
+                    }
+
+                    if (targetTeamIndex !== -1) {
+                        const team = teams[targetTeamIndex];
+                        team.position += effect.value;
+                        if (team.position < 0) team.position = 0;
+                        if (team.position > 32) team.position = 32;
+                        renderTeamIcons();
+                    }
+                }
+            } else if (effect.type === 'removeOil') {
+                if (effect.team === 'all') {
+                    // Remove oil from all teams
+                    teams.forEach(team => {
+                        for (let i = 0; i < effect.count; i++) {
+                            if (team.collectedTiles.length > 0) {
+                                const largestTile = Math.max(...team.collectedTiles);
+                                const index = team.collectedTiles.indexOf(largestTile);
+                                team.collectedTiles.splice(index, 1);
+                                if (team.mines > 0) team.mines--;
+                            }
+                        }
+                    });
+                    renderTeamBoards();
+                    highlightCollectedTiles();
+                } else if (effect.team === 'current') {
+                    // Remove oil from current team
+                    const team = teams[currentTeamIndex];
+                    for (let i = 0; i < effect.count; i++) {
+                        if (team.collectedTiles.length > 0) {
+                            const largestTile = Math.max(...team.collectedTiles);
+                            const index = team.collectedTiles.indexOf(largestTile);
+                            team.collectedTiles.splice(index, 1);
+                            if (team.mines > 0) team.mines--;
+                        }
+                    }
+                    renderTeamBoards();
+                    highlightCollectedTiles();
+                }
+            }
+        }
+
+        function closeEventCard() {
+            document.getElementById('eventCardModal').classList.remove('active');
+        }
+
+        /* ===== END GAME SYSTEM ===== */
+
+        // Check team status after movement
+        function checkTeamStatus() {
+            teams.forEach(team => {
+                if (team.position === 0 && team.isReturning && team.status !== 'arrived') {
+                    team.status = 'arrived';
+                    renderTeamBoards();
+                }
+            });
+
+            // Check end game conditions
+            checkEndGame();
+        }
+
+        function checkEndGame() {
+            if (gameEnded) return;
+
+            // Check if environment <= 0
+            if (environment <= 0) {
+                gameEnded = true;
+                endGame();
+                return;
+            }
+
+            // Check if all teams have arrived
+            const allArrived = teams.every(team => team.status === 'arrived');
+            if (allArrived) {
+                gameEnded = true;
+                endGame();
+            }
+        }
+
+        function endGame() {
+            // Handle failed teams
+            teams.forEach(team => {
+                if (team.status !== 'arrived') {
+                    team.collectedTiles = [];
+                    team.mines = 0;
+                }
+            });
+
+            // Calculate oil for arrived teams
+            const results = teams.map(team => {
+                if (team.status === 'arrived') {
+                    return calculateOil(team);
+                } else {
+                    return {
+                        team: team,
+                        oilFields: 0,
+                        oilDetails: [],
+                        totalOil: 0,
+                        failed: true
+                    };
+                }
+            });
+
+            // Sort by total oil descending
+            results.sort((a, b) => b.totalOil - a.totalOil);
+
+            // Render result table
+            renderResultTable(results);
+        }
+
+        function calculateOil(team) {
+            const oilDetails = [];
+            let totalOil = 0;
+
+            team.collectedTiles.forEach(tileNum => {
+                let oilAmount;
+
+                // Determine layer and generate random oil
+                if (tileNum >= 1 && tileNum <= 8) {
+                    // Layer 1 - Shallow
+                    oilAmount = Math.floor(Math.random() * 100) + 1000;
+                } else if (tileNum >= 9 && tileNum <= 16) {
+                    // Layer 2
+                    oilAmount = Math.floor(Math.random() * 200) + 3000;
+                } else if (tileNum >= 17 && tileNum <= 24) {
+                    // Layer 3
+                    oilAmount = Math.floor(Math.random() * 300) + 6000;
+                } else if (tileNum >= 25 && tileNum <= 32) {
+                    // Layer 4 - Deep
+                    oilAmount = Math.floor(Math.random() * 400) + 10000;
+                }
+
+                oilDetails.push({
+                    tile: tileNum,
+                    oil: oilAmount
+                });
+                totalOil += oilAmount;
+            });
+
+            return {
+                team: team,
+                oilFields: team.collectedTiles.length,
+                oilDetails: oilDetails,
+                totalOil: totalOil,
+                failed: false
+            };
+        }
+
+        function renderResultTable(results) {
+            const table = document.getElementById('resultTable');
+
+            let html = `
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Team</th>
+                        <th>Oil Fields</th>
+                        <th>Oil Details</th>
+                        <th>Total Oil</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+
+            results.forEach((result, index) => {
+                const rowClass = result.failed ? 'failed-row' : (index === 0 ? 'winner-row' : 'success-row');
+                const rank = result.failed ? '-' : (index + 1);
+
+                let oilDetailsHTML = '';
+                if (result.failed) {
+                    oilDetailsHTML = '<span class="failed-text">FAILED</span>';
+                } else {
+                    oilDetailsHTML = result.oilDetails.map(detail =>
+                        `Tile ${detail.tile} → ${detail.oil.toLocaleString()}`
+                    ).join('<br>');
+                }
+
+                html += `
+                    <tr class="${rowClass}">
+                        <td>${rank}</td>
+                        <td>${result.team.name}</td>
+                        <td>${result.oilFields}</td>
+                        <td class="oil-details">${oilDetailsHTML}</td>
+                        <td class="total-oil">${result.totalOil.toLocaleString()}</td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody>';
+            table.innerHTML = html;
+
+            // Show modal
+            document.getElementById('resultModal').classList.add('active');
+        }
+
+        /* ===== INITIALIZE ===== */
+        renderTeamBoards();
+        renderTeamIcons();
+        updateCurrentTeamDisplay();
+        updateEnvironmentBar(); // Initialize environment bar
+        updateRetractButtonState(); // Initialize retract button state
+    </script>
+
+</body>
+
+</html>
