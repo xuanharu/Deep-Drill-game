@@ -98,7 +98,8 @@ async function moveTeam(teamIndex, diceValue) {
 
     if (isReturning) {
         while (
-            isPositionOccupied(targetPosition, teamIndex) &&
+            (isPositionOccupied(targetPosition, teamIndex) ||
+                (typeof usedTiles !== 'undefined' && usedTiles.has(targetPosition))) &&
             targetPosition > 0 &&
             jumpCount < maxJumps
         ) {
@@ -114,7 +115,8 @@ async function moveTeam(teamIndex, diceValue) {
         }
     } else {
         while (
-            isPositionOccupied(targetPosition, teamIndex) &&
+            (isPositionOccupied(targetPosition, teamIndex) ||
+                (typeof usedTiles !== 'undefined' && usedTiles.has(targetPosition))) &&
             targetPosition < 32 &&
             jumpCount < maxJumps
         ) {

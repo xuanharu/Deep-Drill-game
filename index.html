@@ -703,6 +703,18 @@
             };
         });
 
+        /* ===== UPDATE USED TILES VISUAL ===== */
+        function updateUsedTilesVisual() {
+            usedTiles.forEach(tileNum => {
+                const button = document.querySelector(`[data-field="${tileNum}"]`);
+                if (button) {
+                    button.classList.add('tile-used');
+                    button.textContent = '';
+                    button.disabled = true;
+                }
+            });
+        }
+
         /* ===== EVENT CARD SYSTEM ===== */
         function drawEventCard() {
             // Pick a random card
@@ -989,6 +1001,13 @@
             // Reset game ended flag
             gameEnded = false;
 
+            // Add collected tiles to usedTiles before resetting teams
+            teams.forEach(team => {
+                team.collectedTiles.forEach(tile => {
+                    usedTiles.add(tile);
+                });
+            });
+
             // Reset each team
             teams.forEach(team => {
                 team.position = 0;
@@ -1011,6 +1030,7 @@
             renderTeamIcons();
             updateCurrentTeamDisplay();
             updateRetractButtonState();
+            updateUsedTilesVisual(); // Update visual for used tiles
         }
 
         /* ===== INITIALIZE ===== */
