@@ -79,6 +79,12 @@
         <div class="title">🛢️ DEEP DRILL 🛢️</div>
         <div class="subtitle">Khai thác mỏ dầu từ vùng biển sâu</div>
 
+        <!-- TEAM SETTINGS BUTTON -->
+        <button class="team-settings-button-main" onclick="openTeamSettings()" title="Team Settings">
+            <i class="fa-user-icon">👥</i>
+            <span>Team Settings</span>
+        </button>
+
         <!-- GAME CONTAINER -->
         <div class="game-container">
 
@@ -218,14 +224,32 @@
             </div>
 
         </div>
+
+        <!-- TEAM SETTINGS MODAL -->
+        <div class="modal-overlay" id="teamSettingsModal">
+            <div class="modal settings-modal">
+                <div class="modal-header">
+                    <h2>Team Settings</h2>
+                    <button class="close-btn" onclick="closeTeamSettings()">&times;</button>
+                </div>
+                <div class="modal-body settings-body">
+                    <div id="teamSettingsContainer"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-button cancel-button" onclick="closeTeamSettings()">Cancel</button>
+                    <button class="modal-button save-button" onclick="saveTeamSettings()">Save</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="questions.js"></script>
+    <script src="questions_animal.js"></script>
     <script src="eventCards.js"></script>
     <script src="game-logic.js"></script>
     <script>
         /* ===== TEAM DATA ===== */
         const teams = [{
             name: "Team A",
+            icon: "player_icon/architect.png",
             mines: 0,
             position: 0,
             score: 0,
@@ -235,6 +259,7 @@
             status: "active"
         }, {
             name: "Team B",
+            icon: "player_icon/architect.png",
             mines: 0,
             position: 0,
             score: 0,
@@ -244,6 +269,7 @@
             status: "active"
         }, {
             name: "Team C",
+            icon: "player_icon/architect.png",
             mines: 0,
             position: 0,
             score: 0,
@@ -253,6 +279,7 @@
             status: "active"
         }, {
             name: "Team D",
+            icon: "player_icon/architect.png",
             mines: 0,
             position: 0,
             score: 0,
@@ -262,6 +289,7 @@
             status: "active"
         }, {
             name: "Team E",
+            icon: "player_icon/architect.png",
             mines: 0,
             position: 0,
             score: 0,
@@ -313,8 +341,7 @@
                 board.innerHTML = `
                     <div class="team-board-content">
                         ${statusBadge}
-                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${team.name}&backgroundColor=ffcc00"
-                             alt="${team.name}" class="team-avatar">
+                        <div class="team-avatar"><img src="${team.icon}" alt="${team.name}" class="team-avatar-img"></div>
                         <div class="team-info">
                             <div class="team-name-text">${team.name}</div>
                             <div class="team-stats">
@@ -440,11 +467,19 @@
             });
 
             teams.forEach((team, index) => {
-                const icon = document.createElement('img');
+                const icon = document.createElement('div');
                 icon.className = 'team-map-icon';
                 icon.id = `teamIcon${index}`;
-                icon.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${team.name}&backgroundColor=ffcc00`;
-                icon.alt = team.name;
+                icon.title = team.name;
+
+                // Create img element for the icon
+                const img = document.createElement('img');
+                img.src = team.icon;
+                img.alt = team.name;
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'contain';
+                icon.appendChild(img);
 
                 // Place icon at team's current position
                 if (team.position === 0) {
@@ -1031,6 +1066,102 @@
             updateCurrentTeamDisplay();
             updateRetractButtonState();
             updateUsedTilesVisual(); // Update visual for used tiles
+        }
+
+        /* ===== TEAM SETTINGS ===== */
+
+        // Available icons for teams
+        const availableIcons = [
+            'player_icon/architect.png',
+            'player_icon/engineer.png',
+            'player_icon/engineer (1).png',
+            'player_icon/engineer (2).png',
+            'player_icon/engineer (3).png',
+            'player_icon/engineer (4).png',
+            'player_icon/software-engineer.png',
+            'player_icon/software-engineer (1).png',
+            'player_icon/worker.png',
+            'player_icon/architec.png'
+        ];
+
+        // Temporary storage for settings before saving
+        let tempTeamSettings = [];
+
+        function openTeamSettings() {
+            // Copy current team data to temp storage
+            tempTeamSettings = teams.map(team => ({
+                name: team.name,
+                icon: team.icon
+            }));
+
+            // Render settings UI
+            renderTeamSettings();
+
+            // Show modal
+            document.getElementById('teamSettingsModal').classList.add('active');
+        }
+
+        function closeTeamSettings() {
+            document.getElementById('teamSettingsModal').classList.remove('active');
+        }
+
+        function renderTeamSettings() {
+            const container = document.getElementById('teamSettingsContainer');
+            container.innerHTML = '';
+
+            teams.forEach((team, index) => {
+                const settingItem = document.createElement('div');
+                settingItem.className = 'team-setting-item';
+
+                // Create icon options HTML
+                const iconOptionsHTML = availableIcons.map(icon => {
+                    const isSelected = tempTeamSettings[index].icon === icon;
+                    return `<div class="icon-option ${isSelected ? 'selected' : ''}" 
+                                 onclick="selectIcon(${index}, '${icon}')">
+                                <img src="${icon}" alt="icon" class="icon-image">
+                            </div>`;
+                }).join('');
+
+                settingItem.innerHTML = `
+                    <div class="team-setting-header">Team ${String.fromCharCode(65 + index)}</div>
+                    <input type="text" 
+                           class="team-name-input" 
+                           value="${tempTeamSettings[index].name}"
+                           onchange="updateTempTeamName(${index}, this.value)"
+                           placeholder="Enter team name">
+                    <label class="icon-selector-label">Select Icon:</label>
+                    <div class="icon-selector">
+                        ${iconOptionsHTML}
+                    </div>
+                `;
+
+                container.appendChild(settingItem);
+            });
+        }
+
+        function updateTempTeamName(index, newName) {
+            tempTeamSettings[index].name = newName;
+        }
+
+        function selectIcon(teamIndex, icon) {
+            tempTeamSettings[teamIndex].icon = icon;
+            renderTeamSettings();
+        }
+
+        function saveTeamSettings() {
+            // Apply temp settings to actual teams
+            teams.forEach((team, index) => {
+                team.name = tempTeamSettings[index].name;
+                team.icon = tempTeamSettings[index].icon;
+            });
+
+            // Update UI
+            renderTeamBoards();
+            renderTeamIcons();
+            updateCurrentTeamDisplay();
+
+            // Close modal
+            closeTeamSettings();
         }
 
         /* ===== INITIALIZE ===== */
