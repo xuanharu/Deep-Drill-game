@@ -67,6 +67,11 @@
                 ❌ Hủy bỏ một mỏ dầu
             </button>
         </div>
+
+        <!-- END ROUND BUTTON -->
+        <button class="end-round-button" onclick="forceEndGame()">
+            🏁 End Round
+        </button>
     </div>
 
     <!-- MAIN CONTENT AREA -->
@@ -192,6 +197,9 @@
             <div class="result-modal">
                 <h1 class="result-title">🏆 FINAL RESULTS 🏆</h1>
                 <table class="result-table" id="resultTable"></table>
+                <button class="next-round-button" onclick="nextRound()">
+                    ▶️ Next Round
+                </button>
             </div>
         </div>
 
@@ -268,7 +276,9 @@
         let isMoving = false;
         let canAnswerQuiz = false; // Flag to allow quiz interaction after movement
         let environment = 50; // Global environment value (max 50)
+        let environmentMax = 50; // Maximum environment value (decreases each round)
         let gameEnded = false; // Flag to prevent multiple end game triggers
+        let usedTiles = new Set(); // Track tiles used across rounds
 
         /* ===== RENDER TEAM BOARDS ===== */
         function renderTeamBoards() {
@@ -962,6 +972,45 @@
 
             // Show modal
             document.getElementById('resultModal').classList.add('active');
+        }
+
+        /* ===== FORCE END GAME ===== */
+        function forceEndGame() {
+            if (gameEnded) return;
+            gameEnded = true;
+            endGame();
+        }
+
+        /* ===== NEXT ROUND ===== */
+        function nextRound() {
+            // Close result modal
+            document.getElementById('resultModal').classList.remove('active');
+
+            // Reset game ended flag
+            gameEnded = false;
+
+            // Reset each team
+            teams.forEach(team => {
+                team.position = 0;
+                team.collectedTiles = [];
+                team.status = "active";
+                team.isReturning = false;
+                // Keep hasUsedRetract as is (carries over to next round)
+            });
+
+            // Update environment max (decrease by 10, minimum 20)
+            environmentMax = Math.max(20, environmentMax - 10);
+            environment = environmentMax;
+
+            // Reset current team to first team
+            currentTeamIndex = 0;
+
+            // Update UI
+            updateEnvironmentBar();
+            renderTeamBoards();
+            renderTeamIcons();
+            updateCurrentTeamDisplay();
+            updateRetractButtonState();
         }
 
         /* ===== INITIALIZE ===== */

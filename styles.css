@@ -378,6 +378,29 @@ body {
     cursor: not-allowed;
 }
 
+.end-round-button {
+    width: 100%;
+    background: linear-gradient(135deg, #ff3333, #ff6666);
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: auto;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(255, 51, 51, 0.4);
+}
+
+.end-round-button:hover {
+    background: linear-gradient(135deg, #ff6666, #ff8888);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 51, 51, 0.6);
+}
+
 .turn-info {
     margin-top: 40px;
     text-align: center;
@@ -916,6 +939,31 @@ body {
     font-size: 20px;
     font-weight: bold;
     color: #00ff00;
+}
+
+.next-round-button {
+    width: 100%;
+    max-width: 400px;
+    margin: 30px auto 0;
+    display: block;
+    background: linear-gradient(135deg, #00cc00, #00ff00);
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 6px 20px rgba(0, 255, 0, 0.4);
+}
+
+.next-round-button:hover {
+    background: linear-gradient(135deg, #00ff00, #33ff33);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 255, 0, 0.6);
 }
 
 
