@@ -1,216 +1,171 @@
 const questions = [
 
-    // Layer 1: BLUE (1-8) - Cơ bản nhưng không quá dễ
+    // Layer 1: BLUE (1-8) - SASMO cơ bản
     {
-        text: "Which animal is classified as an obligate carnivore?",
-        answers: ["Cow", "Lion", "Rabbit", "Deer"],
+        text: "Chu vi hình chữ nhật là 48. Tổng chiều dài và chiều rộng là bao nhiêu?",
+        answers: ["12", "24", "48", "96"],
         correct: 1
     },
     {
-        text: "Which animal is known for echolocation?",
-        answers: ["Eagle", "Bat", "Elephant", "Tiger"],
-        correct: 1
+        text: "Số nào chia cho 4 dư 1 và chia cho 3 dư 1?",
+        answers: ["5", "7", "9", "13"],
+        correct: 3
     },
     {
-        text: "Which animal has the longest gestation period?",
-        answers: ["Dog", "Elephant", "Cat", "Horse"],
-        correct: 1
-    },
-    {
-        text: "Which animal is a marsupial?",
-        answers: ["Kangaroo", "Tiger", "Whale", "Snake"],
-        correct: 0
-    },
-    {
-        text: "Which animal is cold-blooded?",
-        answers: ["Frog", "Dog", "Bird", "Whale"],
-        correct: 0
-    },
-    {
-        text: "Which animal is known for its migration over long distances?",
-        answers: ["Penguin", "Monarch butterfly", "Lion", "Frog"],
-        correct: 1
-    },
-    {
-        text: "Which animal breathes through gills its entire life?",
-        answers: ["Frog", "Fish", "Turtle", "Snake"],
-        correct: 1
-    },
-    {
-        text: "Which animal is an apex predator?",
-        answers: ["Rabbit", "Wolf", "Deer", "Sheep"],
-        correct: 1
-    },
-
-    // Layer 2: GREEN (9-16) - Tập tính & sinh học
-    {
-        text: "What type of diet does a herbivore have?",
-        answers: ["Meat only", "Plants only", "Both plants and meat", "Insects only"],
-        correct: 1
-    },
-    {
-        text: "Which animal uses camouflage to hunt prey?",
-        answers: ["Octopus", "Elephant", "Horse", "Dolphin"],
-        correct: 0
-    },
-    {
-        text: "Which animal is known to use tools in the wild?",
-        answers: ["Chimpanzee", "Tiger", "Shark", "Deer"],
-        correct: 0
-    },
-    {
-        text: "What is the main diet of a panda?",
-        answers: ["Meat", "Fish", "Bamboo", "Insects"],
+        text: "Dãy số: 2, 5, 11, 23, ?",
+        answers: ["35", "45", "47", "51"],
         correct: 2
     },
     {
-        text: "Which animal hibernates during winter?",
-        answers: ["Bear", "Lion", "Elephant", "Giraffe"],
-        correct: 0
+        text: "Một số nhân 3 rồi cộng 7 được 40. Số đó là?",
+        answers: ["9", "10", "11", "12"],
+        correct: 2
     },
     {
-        text: "Which animal has a symbiotic relationship with clownfish?",
-        answers: ["Coral", "Sea anemone", "Jellyfish", "Shark"],
+        text: "Có bao nhiêu số từ 1 đến 50 chia hết cho 4?",
+        answers: ["11", "12", "13", "14"],
         correct: 1
     },
     {
-        text: "Which animal is known for bioluminescence?",
-        answers: ["Jellyfish", "Dog", "Eagle", "Cow"],
-        correct: 0
+        text: "Tổng 3 số liên tiếp là 63. Số lớn nhất là?",
+        answers: ["20", "21", "22", "23"],
+        correct: 2
     },
     {
-        text: "Which animal group is known as omnivores?",
-        answers: ["Animals that eat only plants", "Animals that eat only meat", "Animals that eat both plants and meat", "Animals that eat nothing"],
+        text: "Nếu 1/5 của một số là 12, số đó là?",
+        answers: ["50", "55", "60", "65"],
+        correct: 2
+    },
+    {
+        text: "Một hình vuông có diện tích 81. Chu vi là?",
+        answers: ["18", "27", "36", "40"],
         correct: 2
     },
 
-    // Layer 3: ORANGE (17-24) - Thuật ngữ & hệ sinh thái
+    // Layer 2: GREEN (9-16) - Logic & số học
     {
-        text: "What is an ecosystem?",
-        answers: [
-            "A single animal",
-            "A group of plants only",
-            "A community of living organisms and their environment",
-            "Only water animals"
-        ],
+        text: "Một số chia 6 dư 2, chia 4 dư 2. Số nhỏ nhất là?",
+        answers: ["8", "10", "14", "20"],
         correct: 2
     },
     {
-        text: "Which animal is a keystone species?",
-        answers: ["Sea otter", "Cat", "Dog", "Cow"],
-        correct: 0
+        text: "Nếu a + b = 15 và a - b = 3, thì a = ?",
+        answers: ["6", "7", "8", "9"],
+        correct: 3
     },
     {
-        text: "What does 'nocturnal' mean?",
-        answers: [
-            "Active during the day",
-            "Active at night",
-            "Lives in water",
-            "Eats plants"
-        ],
+        text: "Có bao nhiêu số có 2 chữ số mà tổng chữ số bằng 10?",
+        answers: ["8", "9", "10", "11"],
         correct: 1
     },
     {
-        text: "Which animal is known for pack hunting behavior?",
-        answers: ["Tiger", "Wolf", "Leopard", "Bear"],
+        text: "Dãy số: 1, 4, 10, 22, ?",
+        answers: ["40", "46", "50", "52"],
         correct: 1
     },
     {
-        text: "What is the role of predators in an ecosystem?",
-        answers: [
-            "Destroy plants",
-            "Control prey populations",
-            "Produce oxygen",
-            "Eat only plants"
-        ],
+        text: "Một số nhân 4 rồi trừ 5 được 27. Số đó là?",
+        answers: ["6", "7", "8", "9"],
+        correct: 2
+    },
+    {
+        text: "Có 30 học sinh, 18 thích Toán, 12 thích Văn, 6 không thích môn nào. Bao nhiêu học sinh thích cả hai?",
+        answers: ["4", "5", "6", "8"],
+        correct: 2
+    },
+    {
+        text: "Tổng các số từ 1 đến 20 là?",
+        answers: ["200", "210", "220", "230"],
         correct: 1
     },
     {
-        text: "Which animal is an example of a scavenger?",
-        answers: ["Vulture", "Lion", "Deer", "Horse"],
-        correct: 0
-    },
-    {
-        text: "What is mimicry in animals?",
-        answers: [
-            "Changing color randomly",
-            "Imitating another species for survival",
-            "Sleeping during winter",
-            "Eating plants"
-        ],
+        text: "Một số có 2 chữ số, tổng chữ số là 9. Có bao nhiêu số như vậy?",
+        answers: ["8", "9", "10", "11"],
         correct: 1
-    },
-    {
-        text: "Which animal is known for territorial behavior?",
-        answers: ["Tiger", "Rabbit", "Sheep", "Cow"],
-        correct: 0
     },
 
-    // Layer 4: RED (25-32) - Nâng cao
+    // Layer 3: ORANGE (17-24) - Suy luận SASMO
     {
-        text: "What is sexual dimorphism?",
-        answers: [
-            "Different species living together",
-            "Differences between males and females of the same species",
-            "Animals changing color",
-            "Animals changing diet"
-        ],
+        text: "Một hình chữ nhật có chiều dài hơn chiều rộng 4 đơn vị, chu vi là 28. Chiều dài là?",
+        answers: ["8", "9", "10", "11"],
+        correct: 0
+    },
+    {
+        text: "Một số chia 5 dư 2, chia 7 dư 2. Số nhỏ nhất là?",
+        answers: ["12", "17", "23", "37"],
+        correct: 3
+    },
+    {
+        text: "Dãy: 3, 9, 27, 81, ?",
+        answers: ["162", "243", "256", "300"],
         correct: 1
     },
     {
-        text: "Which animal has the most powerful bite force among land animals?",
-        answers: ["Lion", "Hyena", "Crocodile", "Tiger"],
+        text: "Một tam giác có tổng 2 góc là 110°. Góc còn lại là?",
+        answers: ["60°", "70°", "80°", "90°"],
+        correct: 1
+    },
+    {
+        text: "Có bao nhiêu số chia hết cho 3 từ 1 đến 99?",
+        answers: ["32", "33", "34", "35"],
+        correct: 1
+    },
+    {
+        text: "Một số nhân 5 rồi trừ 15 được 35. Số đó là?",
+        answers: ["8", "9", "10", "11"],
         correct: 2
     },
     {
-        text: "What is the main function of venom in animals?",
-        answers: [
-            "Digestion",
-            "Defense or capturing prey",
-            "Flying",
-            "Swimming"
-        ],
+        text: "Tổng 4 số liên tiếp là 50. Số nhỏ nhất là?",
+        answers: ["10", "11", "12", "13"],
         correct: 1
     },
     {
-        text: "Which animal is known for eusocial behavior?",
-        answers: ["Ant", "Tiger", "Elephant", "Bear"],
+        text: "Một hình lập phương cạnh 2. Có bao nhiêu mặt vuông nhỏ?",
+        answers: ["12", "18", "24", "6"],
+        correct: 2
+    },
+
+    // Layer 4: RED (25-32) - SASMO khó
+    {
+        text: "Một số chia 8 dư 3, chia 5 dư 3. Số nhỏ nhất là?",
+        answers: ["13", "23", "33", "43"],
+        correct: 1
+    },
+    {
+        text: "Có bao nhiêu số từ 1 đến 100 có chữ số hàng đơn vị là 5?",
+        answers: ["9", "10", "11", "12"],
+        correct: 1
+    },
+    {
+        text: "Tổng của các số chẵn từ 2 đến 20 là?",
+        answers: ["100", "110", "120", "130"],
+        correct: 1
+    },
+    {
+        text: "Một số tăng gấp đôi rồi cộng 10 được 50. Số đó là?",
+        answers: ["15", "20", "25", "30"],
+        correct: 1
+    },
+    {
+        text: "Một lớp có 40 học sinh, 25 thích Toán, 20 thích Anh, 5 không thích môn nào. Bao nhiêu học sinh thích cả hai?",
+        answers: ["10", "15", "5", "20"],
         correct: 0
     },
     {
-        text: "What does 'endangered species' mean?",
-        answers: [
-            "Species with many individuals",
-            "Species at risk of extinction",
-            "Species that live in water",
-            "Species that eat plants"
-        ],
+        text: "Có bao nhiêu ước của số 24?",
+        answers: ["6", "7", "8", "9"],
+        correct: 2
+    },
+    {
+        text: "Một dãy tăng gấp đôi mỗi lần: 2, 4, 8,... Số thứ 7 là?",
+        answers: ["64", "128", "256", "512"],
         correct: 1
     },
     {
-        text: "Which factor most affects animal extinction?",
-        answers: [
-            "Weather only",
-            "Human activities",
-            "Animal size",
-            "Color of fur"
-        ],
+        text: "Tổng 1 + 2 + ... + 100 = ?",
+        answers: ["5000", "5050", "5100", "4950"],
         correct: 1
-    },
-    {
-        text: "What is adaptive evolution?",
-        answers: [
-            "Animals staying the same",
-            "Changes that improve survival in an environment",
-            "Animals sleeping more",
-            "Animals eating less"
-        ],
-        correct: 1
-    },
-    {
-        text: "Which animal is capable of regenerating lost limbs?",
-        answers: ["Starfish", "Dog", "Cat", "Bird"],
-        correct: 0
     }
 ];
 
